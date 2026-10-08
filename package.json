@@ -1,0 +1,41 @@
+{
+  "name": "brainfuck-language-support",
+  "displayName": "Brainfuck Language Support",
+  "description": "Run Brainfuck programs with an external compiler or interpreter.",
+  "version": "0.1.0",
+  "publisher": "local-tools",
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Programming Languages", "Other"],
+  "keywords": ["brainfuck", "language", "interpreter"],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node ./node_modules/typescript/bin/tsc -p ./ && node --test out/test/*.test.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.26.1",
+    "typescript": "^5.7.2"
+  },
+  "contributes": {
+    "languages": [{ "id": "brainfuck", "aliases": ["Brainfuck", "brainfuck"], "extensions": [".bf", ".b", ".brainfuck"], "configuration": "./language-configuration.json" }],
+    "grammars": [{ "language": "brainfuck", "scopeName": "source.brainfuck", "path": "./syntaxes/brainfuck.tmLanguage.json" }],
+    "commands": [
+      { "command": "brainfuck.run", "title": "Brainfuck: Run" },
+      { "command": "brainfuck.runCurrentFile", "title": "Brainfuck: Run Current File" }
+    ],
+    "menus": { "editor/title": [{ "command": "brainfuck.run", "when": "resourceLangId == brainfuck", "group": "navigation" }] },
+    "configuration": { "title": "Brainfuck", "properties": {
+      "brainfuck.compilerPath": { "type": "string", "default": "", "description": "Path to the Brainfuck compiler or interpreter executable." },
+      "brainfuck.compilerArgs": { "type": "array", "items": { "type": "string" }, "default": [], "description": "Arguments passed before the source file path." },
+      "brainfuck.runArgs": { "type": "array", "items": { "type": "string" }, "default": [], "description": "Additional arguments passed after the source file path." },
+      "brainfuck.timeout": { "type": "number", "default": 5000, "minimum": 100, "maximum": 600000, "description": "Maximum execution time in milliseconds." }
+    } }
+  },
+  "files": ["out/**", "syntaxes/**", "language-configuration.json", "README.md"]
+}
